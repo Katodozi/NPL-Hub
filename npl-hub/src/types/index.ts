@@ -96,6 +96,7 @@ export interface Match {
   team2_id: string;
   winner_id: string | null;
   result_margin: string | null;   // e.g. "5 wickets" or "32 runs"
+  is_completed: boolean;
   cricketdata_match_id: string | null;
   team1?: Team;
   team2?: Team;

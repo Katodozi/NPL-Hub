@@ -474,7 +474,7 @@ export default function EditPlayerPage() {
                 No team assignments yet.
               </p>
               <p className="text-xs text-muted-foreground">
-                This player won't appear in any team squad until assigned.
+                This player won&apos;t appear in any team squad until assigned.
               </p>
             </div>
           ) : (

@@ -53,7 +53,7 @@ export default function AboutPage() {
         </div>
         <p className="text-muted-foreground leading-relaxed">
           NPL Hub is an unofficial, community-built fan platform dedicated to the
-          Nepal Premier League — Nepal's premier T20 franchise cricket tournament
+          Nepal Premier League — Nepal&apos;s premier T20 franchise cricket tournament
           organised by the Cricket Association of Nepal (CAN).
         </p>
         <p className="text-muted-foreground leading-relaxed mt-3">

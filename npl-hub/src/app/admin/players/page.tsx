@@ -225,7 +225,7 @@ export default async function AdminPlayersPage() {
           <span className="font-mono text-xs bg-npl-blue-100 dark:bg-npl-blue-900/40 px-1 rounded">
             ⚠️ Unassigned
           </span>{" "}
-          count shows players not yet linked to any team — they won't appear in team squad pages.
+          count shows players not yet linked to any team — they won&apos;t appear in team squad pages.
         </p>
       </div>
     </div>

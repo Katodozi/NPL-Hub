@@ -67,12 +67,12 @@ export function FeaturedTeams() {
                     <div className="flex gap-1">
                       {isChamp25 && (
                         <span className="text-[10px] font-semibold bg-npl-gold-100 dark:bg-npl-gold-900/30 text-npl-gold-700 dark:text-npl-gold-400 px-1.5 py-0.5 rounded">
-                          '25 🏆
+                          &apos;25 🏆
                         </span>
                       )}
                       {isChamp24 && !isChamp25 && (
                         <span className="text-[10px] font-semibold bg-npl-gold-100 dark:bg-npl-gold-900/30 text-npl-gold-700 dark:text-npl-gold-400 px-1.5 py-0.5 rounded">
-                          '24 🏆
+                          &apos;24 🏆
                         </span>
                       )}
                     </div>

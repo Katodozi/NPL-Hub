@@ -98,7 +98,7 @@ function formatDate(iso: string) {
 
 async function getArticles(): Promise<{ articles: SanityArticle[]; fromCMS: boolean }> {
   try {
-    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    if (!sanityClient) {
       return { articles: STATIC_ARTICLES, fromCMS: false };
     }
     const articles = await sanityClient.fetch<SanityArticle[]>(FEATURED_ARTICLES_QUERY);

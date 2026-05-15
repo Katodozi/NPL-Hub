@@ -15,7 +15,7 @@ export default function ContactPage() {
       <h1 className="text-3xl font-bold text-foreground mb-2">Contact</h1>
       <p className="text-muted-foreground mb-10">
         Have a correction, suggestion, or want to contribute to NPL Hub?
-        We'd love to hear from you.
+        We&apos;d love to hear from you.
       </p>
 
       <div className="space-y-4">
@@ -29,7 +29,7 @@ export default function ContactPage() {
             </h3>
             <p className="text-sm text-muted-foreground">
               Found a wrong stat or player detail? Open an issue on GitHub or
-              email us and we'll fix it within 48 hours.
+              email us and we&apos;ll fix it within 48 hours.
             </p>
           </div>
         </div>

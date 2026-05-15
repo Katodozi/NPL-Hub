@@ -48,7 +48,7 @@ const STATIC_CONTENT: Record<string, SanityArticle> = {
 
 export async function generateStaticParams() {
   try {
-    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    if (!sanityClient) {
       return Object.keys(STATIC_CONTENT).map((slug) => ({ slug }));
     }
     const articles = await sanityClient.fetch<SanityArticle[]>(FEATURED_ARTICLES_QUERY);
@@ -63,7 +63,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await params;
   try {
-    if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    if (sanityClient) {
       const article = await sanityClient.fetch<SanityArticle>(ARTICLE_BY_SLUG_QUERY, { slug });
       if (article) return { title: article.title, description: article.excerpt };
     }
@@ -75,7 +75,7 @@ export async function generateMetadata(
 
 async function getArticle(slug: string): Promise<SanityArticle | null> {
   try {
-    if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    if (sanityClient) {
       const article = await sanityClient.fetch<SanityArticle>(ARTICLE_BY_SLUG_QUERY, { slug });
       if (article) return article;
     }

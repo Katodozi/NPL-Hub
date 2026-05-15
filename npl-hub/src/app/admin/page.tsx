@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { Users, Building2, Calendar, Trophy, Plus, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getBuildClient } from "@/lib/db";

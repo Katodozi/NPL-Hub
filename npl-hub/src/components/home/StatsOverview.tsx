@@ -24,7 +24,7 @@ function AnimatedNumber({
   running: boolean;
 }) {
   const [val, setVal] = useState(0);
-  const raf = useRef<number>();
+  const raf = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (!running) return;

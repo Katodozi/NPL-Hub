@@ -1,66 +1,44 @@
-import { createClient } from "next-sanity";
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-export const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "",
-  dataset:   process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
-  apiVersion: "2024-01-01",
-  useCdn:    true,
-});
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset   = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";
 
-const builder = imageUrlBuilder(sanityClient);
+// ── Only create the client if projectId exists ────────────────────────────────
+export const sanityClient = projectId
+  ? (await import("next-sanity").then(({ createClient }) =>
+      createClient({ projectId, dataset, apiVersion: "2024-01-01", useCdn: true })
+    ))
+  : null;
 
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
+  if (!sanityClient) throw new Error("Sanity not configured");
+  return imageUrlBuilder(sanityClient).image(source);
 }
 
-// ─── GROQ Queries ─────────────────────────────────────────────────────────────
-
+// ── GROQ Queries ──────────────────────────────────────────────────────────────
 export const ALL_ARTICLES_QUERY = `
   *[_type == "article"] | order(publishedAt desc) {
-    _id,
-    title,
-    slug,
-    category,
-    excerpt,
-    publishedAt,
-    readTime,
-    "imageUrl": mainImage.asset->url,
-    author->{name}
+    _id, title, slug, category, excerpt, publishedAt, readTime,
+    "imageUrl": mainImage.asset->url, author->{name}
   }
 `;
 
 export const ARTICLE_BY_SLUG_QUERY = `
   *[_type == "article" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    category,
-    excerpt,
-    publishedAt,
-    readTime,
-    "imageUrl": mainImage.asset->url,
-    body,
-    author->{name, bio}
+    _id, title, slug, category, excerpt, publishedAt, readTime,
+    "imageUrl": mainImage.asset->url, body, author->{name, bio}
   }
 `;
 
 export const FEATURED_ARTICLES_QUERY = `
   *[_type == "article"] | order(publishedAt desc) [0...6] {
-    _id,
-    title,
-    slug,
-    category,
-    excerpt,
-    publishedAt,
-    readTime,
+    _id, title, slug, category, excerpt, publishedAt, readTime,
     "imageUrl": mainImage.asset->url
   }
 `;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
+// ── Types ─────────────────────────────────────────────────────────────────────
 export interface SanityArticle {
   _id:         string;
   title:       string;

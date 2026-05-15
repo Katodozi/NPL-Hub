@@ -8,6 +8,7 @@ import {
 } from "@/lib/db";
 import { SEASON_CHAMPIONS, NPL_META, NPL_TEAMS } from "@/config/constants";
 import { slugify, cn } from "@/lib/utils";
+import type { Match } from "@/types";
 
 export async function generateStaticParams() {
   const years = [2024, 2025, NPL_META.current_season];
@@ -97,12 +98,8 @@ function PointsTable({
 }
 
 // ── Match card ────────────────────────────────────────────────────────────────
-function MatchCard({ match }: { match: Record<string, unknown> }) {
-  const team1 = match.team1 as { name?: string; short_code?: string; primary_color?: string } | undefined;
-  const team2 = match.team2 as { name?: string; short_code?: string; primary_color?: string } | undefined;
-  const winner = match.winner as { id?: string } | undefined;
-  const isCompleted = match.is_completed as boolean;
-  const matchType = match.match_type as string;
+function MatchCard({ match }: { match: Match }) {
+  const { team1, team2, winner, is_completed: isCompleted, match_type: matchType } = match;
 
   const typeLabel: Record<string, string> = {
     league: "League", qualifier1: "Qualifier 1", qualifier2: "Qualifier 2",
@@ -122,10 +119,10 @@ function MatchCard({ match }: { match: Record<string, unknown> }) {
             ? "bg-npl-gold-100 text-npl-gold-700"
             : "bg-muted text-muted-foreground"
         )}>
-          {typeLabel[matchType] ?? matchType} · #{match.match_number as number}
+          {typeLabel[matchType] ?? matchType} · #{match.match_number}
         </span>
         <span className="text-xs text-muted-foreground">
-          {match.date ? new Date(match.date as string).toLocaleDateString("en-US", {
+          {match.date ? new Date(match.date).toLocaleDateString("en-US", {
             month: "short", day: "numeric"
           }) : "TBA"}
         </span>
@@ -138,7 +135,7 @@ function MatchCard({ match }: { match: Record<string, unknown> }) {
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: team1?.primary_color ?? "#ccc" }} />
             <span className={cn(
               "font-semibold text-sm",
-              isCompleted && winner?.id === (match.team1_id as string)
+              isCompleted && winner?.id === match.team1_id
                 ? "text-npl-green-600" : "text-foreground"
             )}>
               {team1?.short_code ?? "TBA"}
@@ -154,7 +151,7 @@ function MatchCard({ match }: { match: Record<string, unknown> }) {
           <div className="flex items-center justify-end gap-1.5">
             <span className={cn(
               "font-semibold text-sm",
-              isCompleted && winner?.id === (match.team2_id as string)
+              isCompleted && winner?.id === match.team2_id
                 ? "text-npl-green-600" : "text-foreground"
             )}>
               {team2?.short_code ?? "TBA"}
@@ -167,13 +164,13 @@ function MatchCard({ match }: { match: Record<string, unknown> }) {
       {/* Result */}
       {isCompleted && match.result_margin && (
         <p className="text-xs text-center text-muted-foreground mt-2 pt-2 border-t border-border">
-          {match.result_margin as string}
+          {match.result_margin}
         </p>
       )}
 
       {/* Venue */}
       <p className="text-[10px] text-muted-foreground text-center mt-1">
-        {match.venue as string}
+        {match.venue}
       </p>
     </div>
   );
@@ -347,7 +344,7 @@ export default async function SeasonPage(
                   <Trophy className="w-5 h-5 text-npl-gold-500" /> Playoffs
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {playoffMatches.map((m) => <MatchCard key={m.id} match={m as Record<string, unknown>} />)}
+                  {playoffMatches.map((m) => <MatchCard key={m.id} match={m} />)}
                 </div>
               </section>
             )}
@@ -359,7 +356,7 @@ export default async function SeasonPage(
                   <Calendar className="w-5 h-5 text-npl-blue-400" /> League Matches
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                  {leagueMatches.map((m) => <MatchCard key={m.id} match={m as Record<string, unknown>} />)}
+                  {leagueMatches.map((m) => <MatchCard key={m.id} match={m} />)}
                 </div>
               </section>
             )}

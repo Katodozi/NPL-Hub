@@ -18,8 +18,8 @@ export default function NotFound() {
         Stumped — page not found
       </h1>
       <p className="text-muted-foreground max-w-md mb-10 leading-relaxed">
-        The page you're looking for has been run out, caught behind, or never
-        existed. Let's get you back to the crease.
+        The page you&apos;re looking for has been run out, caught behind, or never
+        existed. Let&apos;s get you back to the crease.
       </p>
 
       {/* Quick links */}
