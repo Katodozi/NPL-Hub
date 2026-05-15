@@ -5,6 +5,9 @@ import { getBuildClient } from "@/lib/db";
 
 async function getAdminStats() {
   const supabase = getBuildClient();
+  if (!supabase) {
+    return { players: 0, teams: 0, matches: 0, awards: 0 };
+  }
   const [players, teams, matches, awards] = await Promise.all([
     supabase.from("players").select("id", { count: "exact", head: true }),
     supabase.from("teams").select("id", { count: "exact", head: true }),

@@ -22,6 +22,13 @@ interface PlayerWithTeams {
 
 export default async function AdminPlayersPage() {
   const supabase = getBuildClient();
+  if (!supabase) {
+    return (
+      <div className="p-8 text-center text-muted-foreground">
+        Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.
+      </div>
+    );
+  }
 
   const { data, error } = await supabase
     .from("players")

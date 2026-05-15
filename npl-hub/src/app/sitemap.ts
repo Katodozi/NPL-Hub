@@ -8,11 +8,17 @@ const BASE = process.env.NEXT_PUBLIC_APP_URL ?? "https://nplhub.com";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getBuildClient();
 
-  // Fetch slugs from DB
-  const [{ data: players }, { data: teams }] = await Promise.all([
-    supabase.from("players").select("slug, updated_at"),
-    supabase.from("teams").select("slug"),
-  ]);
+  // Fetch slugs from DB (skip if env vars not set — e.g. Vercel build without secrets)
+  let players: { slug: string; updated_at: string | null }[] = [];
+  let teams: { slug: string }[] = [];
+  if (supabase) {
+    const [{ data: p }, { data: t }] = await Promise.all([
+      supabase.from("players").select("slug, updated_at"),
+      supabase.from("teams").select("slug"),
+    ]);
+    players = p ?? [];
+    teams = t ?? [];
+  }
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -36,8 +42,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Team pages — use DB if available, fall back to constants
-  const teamSlugs = teams?.map((t) => t.slug) ??
-    NPL_TEAMS.map((t) => slugify(t.name));
+  const teamSlugs = teams.length > 0
+    ? teams.map((t) => t.slug)
+    : NPL_TEAMS.map((t) => slugify(t.name));
   const teamPages: MetadataRoute.Sitemap = teamSlugs.map((slug) => ({
     url: `${BASE}/teams/${slug}`,
     lastModified: new Date(),
@@ -46,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Player pages
-  const playerPages: MetadataRoute.Sitemap = (players ?? []).map((p) => ({
+  const playerPages: MetadataRoute.Sitemap = players.map((p) => ({
     url: `${BASE}/players/${p.slug}`,
     lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
     changeFrequency: "weekly" as const,

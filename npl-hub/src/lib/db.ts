@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import type {
   Team,
@@ -14,11 +14,11 @@ import type {
 // ─── Clients ──────────────────────────────────────────────────────────────────
 
 // Build-time safe — no cookies, works in generateStaticParams
-export function getBuildClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+export function getBuildClient(): SupabaseClient | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
 }
 
 // Runtime server client — use in page/component render only
@@ -30,6 +30,7 @@ async function getServerClient() {
 
 export async function getAllTeams(): Promise<Team[]> {
   const supabase = getBuildClient();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("teams")
     .select("*")
